@@ -1,83 +1,88 @@
 package ru.hogwarts.school.service;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 public class StudentServiceTest {
 
-    private final StudentService studentService = new StudentService();
+    @Mock
+    private StudentRepository studentRepository;
+
+    @InjectMocks
+    private StudentService studentService;
 
     @BeforeEach
-    public void init(){
-        studentService.createStudent(new Student(0L, "Dima", 15));
-        studentService.createStudent(new Student(0L, "Dima1", 15));
-        studentService.createStudent(new Student(0L, "Dima2", 10));
+    public void init() {
+        studentService = new StudentService(studentRepository);
     }
 
     @Test
     public void creatStudent() {
-        Student actual = studentService.createStudent(new Student(0L, "Dima3", 15));
         Student expected = new Student(4L, "Dima3", 15);
+        Mockito.when(studentRepository.save(expected))
+                .thenReturn(expected);
+        Student actual = studentService.createStudent(expected);
         assertEquals(expected, actual);
     }
 
     @Test
     public void getStudentPositive() {
-        Student actual = studentService.getStudent(1L);
         Student expected = new Student(1L, "Dima", 15);
+        Mockito.when(studentRepository.findById(1L))
+                .thenReturn(Optional.of(expected));
+        Student actual = studentService.getStudent(1L);
         assertEquals(expected, actual);
     }
 
     @Test
     public void getStudentNegative() {
+        Mockito.when(studentRepository.findById(10L))
+                .thenReturn(Optional.empty());
         Student actual = studentService.getStudent(10L);
         assertNull(actual);
     }
 
     @Test
     public void updateStudentPositive() {
-        Student actual = studentService.updateStudent(new Student(2L, "Dima1", 15));
         Student expected = new Student(2L, "Dima1", 15);
+        Mockito.when(studentRepository.save(expected)).thenReturn(expected);
+        Student actual = studentService.updateStudent(expected);
         assertEquals(expected, actual);
-    }
-
-    @Test
-    public void updateStudentNegative() {
-        Student actual = studentService.updateStudent(new Student(10L, "Dima", 15));
-        assertNull(actual);
     }
 
     @Test
     public void deleteStudentPositive() {
-        Student actual = studentService.deleteStudent(2L);
-        Student expected = new Student(2L, "Dima1", 15);
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void deleteStudentNegative() {
-        Student actual = studentService.deleteStudent(10L);
-        assertNull(actual);
+        studentService.deleteStudent(1L);
+        Mockito.verify(studentRepository, Mockito.times(1)).deleteById(Mockito.any());
     }
 
     @Test
     public void getStudentsByAgePositive() {
-        List<Student> actual = studentService.getStudentsByAge(10);
         List<Student> expected = new ArrayList<>(List.of(new Student(3L, "Dima2", 10)));
+        Mockito.when(studentRepository.findByAge(10)).thenReturn(expected);
+        List<Student> actual = studentService.getStudentsByAge(10);
         assertIterableEquals(expected,actual);
     }
 
     @Test
     public void getStudentsByAgeNegative() {
-        List<Student> actual = studentService.getStudentsByAge(20);
         List<Student> expected = new ArrayList<>();
+        Mockito.when(studentRepository.findByAge(20)).thenReturn(expected);
+        List<Student> actual = studentService.getStudentsByAge(20);
         assertIterableEquals(expected,actual);
     }
 

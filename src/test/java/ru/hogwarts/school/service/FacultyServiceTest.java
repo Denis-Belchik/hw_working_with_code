@@ -2,82 +2,87 @@ package ru.hogwarts.school.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
+@ExtendWith(MockitoExtension.class)
 public class FacultyServiceTest {
 
-    private final FacultyService facultyService = new FacultyService();
+    @Mock
+    private FacultyRepository facultyRepository;
+
+    @InjectMocks
+    private FacultyService facultyService;
 
     @BeforeEach
-    public void init(){
-        facultyService.createFaculty(new Faculty(0L, "Griff", "red"));
-        facultyService.createFaculty(new Faculty(0L, "Slizz", "green"));
-        facultyService.createFaculty(new Faculty(0L, "Griff", "red"));
+    public void init() {
+        facultyService = new FacultyService(facultyRepository);
     }
 
     @Test
     public void creatFaculty() {
-        Faculty actual = facultyService.createFaculty(new Faculty(0L, "Griff", "black"));
-        Faculty expected = new Faculty(4L, "Griff", "black");
+        Faculty expected = new Faculty(4L, "Slizz", "Black");
+        Mockito.when(facultyRepository.save(expected))
+                .thenReturn(expected);
+        Faculty actual = facultyService.createFaculty(expected);
         assertEquals(expected, actual);
     }
 
     @Test
     public void getFacultyPositive() {
+        Faculty expected = new Faculty(4L, "Slizz", "Black");
+        Mockito.when(facultyRepository.findById(1L))
+                .thenReturn(Optional.of(expected));
         Faculty actual = facultyService.getFaculty(1L);
-        Faculty expected = new Faculty(1L, "Griff", "red");
         assertEquals(expected, actual);
     }
 
     @Test
     public void getFacultyNegative() {
+        Mockito.when(facultyRepository.findById(10L))
+                .thenReturn(Optional.empty());
         Faculty actual = facultyService.getFaculty(10L);
         assertNull(actual);
     }
 
     @Test
     public void updateFacultyPositive() {
-        Faculty actual = facultyService.updateFaculty(new Faculty(2L, "Slizz", "green"));
-        Faculty expected = new Faculty(2L, "Slizz", "green");
+        Faculty expected = new Faculty(4L, "Slizz", "Black");
+        Mockito.when(facultyRepository.save(expected)).thenReturn(expected);
+        Faculty actual = facultyService.updateFaculty(expected);
         assertEquals(expected, actual);
-    }
-
-    @Test
-    public void updateFacultyNegative() {
-        Faculty actual = facultyService.updateFaculty(new Faculty(10L, "Slizzz", "green"));
-        assertNull(actual);
     }
 
     @Test
     public void deleteFacultyPositive() {
-        Faculty actual = facultyService.deleteFaculty(2L);
-        Faculty expected = new Faculty(2L, "Slizz", "green");
-        assertEquals(expected, actual);
-    }
-
-    @Test
-    public void deleteFacultyNegative() {
-        Faculty actual = facultyService.deleteFaculty(10L);
-        assertNull(actual);
+        facultyService.deleteFaculty(1L);
+        Mockito.verify(facultyRepository, Mockito.times(1)).deleteById(Mockito.any());
     }
 
     @Test
     public void getFacultyByColorPositive() {
-        List<Faculty> actual = facultyService.getFacultyByColor("green");
-        List<Faculty> expected = new ArrayList<>(List.of(new Faculty(2L, "Slizz", "green")));
+        List<Faculty> expected = new ArrayList<>(List.of(new Faculty(4L, "Slizz", "Black")));
+        Mockito.when(facultyRepository.findByColor("Black")).thenReturn(expected);
+        List<Faculty> actual = facultyService.getFacultyByColor("Black");
         assertIterableEquals(expected,actual);
     }
 
     @Test
     public void getFacultyByColorNegative() {
-        List<Faculty> actual = facultyService.getFacultyByColor("greens");
         List<Faculty> expected = new ArrayList<>();
+        Mockito.when(facultyRepository.findByColor("Black")).thenReturn(expected);
+        List<Faculty> actual = facultyService.getFacultyByColor("Black");
         assertIterableEquals(expected,actual);
     }
 
