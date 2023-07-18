@@ -6,7 +6,6 @@ import ru.hogwarts.school.model.Student;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,7 +17,8 @@ public class StudentService {
 
     public Student createStudent(Student student) {
         student.setId(++id);
-        return studentMap.put(id, student);
+        studentMap.put(id, student);
+        return student;
     }
 
     public Student getStudent(Long id) {

@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.FacultyService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
@@ -46,6 +48,11 @@ public class FacultyController {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.ok(faculty);
+    }
+
+    @GetMapping("/filter{color}")
+    public List<Faculty> getFacultyByColor(@PathVariable String color){
+        return facultyService.getFacultyByColor(color);
     }
 
 }
