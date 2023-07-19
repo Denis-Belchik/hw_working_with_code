@@ -27,6 +27,24 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Faculty>> getFacultyByColorOrName(@RequestParam(required = false) String name,
+                                                                 @RequestParam(required = false) String color) {
+        if (name != null && !name.isBlank())
+            return ResponseEntity.ok(facultyService.getFacultyByName(name));
+        if (color != null && !color.isBlank())
+            return ResponseEntity.ok(facultyService.getFacultyByName(color));
+        return ResponseEntity.ok(facultyService.getAllFaculty());
+    }
+
+    @GetMapping("/student")
+    public ResponseEntity<Faculty> getFacultyByStudents_id(@RequestParam long id) {
+        Faculty faculty = facultyService.getByStudents_id(id);
+        if (faculty == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.ok(faculty);
+    }
+
     @PostMapping
     public Faculty creatFaculty(@RequestBody Faculty faculty) {
         return facultyService.createFaculty(faculty);
