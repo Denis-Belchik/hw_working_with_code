@@ -37,8 +37,8 @@ public class StudentController {
     }
 
     @GetMapping("/faculty")
-    public ResponseEntity<List<Student>> getStudentsByFaculty_id(@RequestParam long id) {
-        List<Student> studentList = studentService.getByFaculty_Id(id);
+    public ResponseEntity<List<Student>> getStudentsByFacultyId(@RequestParam long id) {
+        List<Student> studentList = studentService.getByFacultyId(id);
         if (studentList.isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         return ResponseEntity.ok(studentList);

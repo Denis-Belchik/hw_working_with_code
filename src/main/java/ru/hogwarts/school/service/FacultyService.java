@@ -45,8 +45,8 @@ public class FacultyService {
         return facultyRepository.findAll();
     }
 
-    public Faculty getByStudents_id(long id){
-        return facultyRepository.findByStudents_id(id);
+    public Faculty getByStudentsId(long id){
+        return facultyRepository.findByStudentsId(id);
     }
 
 }

@@ -38,8 +38,8 @@ public class FacultyController {
     }
 
     @GetMapping("/student")
-    public ResponseEntity<Faculty> getFacultyByStudents_id(@RequestParam long id) {
-        Faculty faculty = facultyService.getByStudents_id(id);
+    public ResponseEntity<Faculty> getFacultyByStudentsId(@RequestParam long id) {
+        Faculty faculty = facultyService.getByStudentsId(id);
         if (faculty == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         return ResponseEntity.ok(faculty);
