@@ -27,6 +27,23 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
+    @GetMapping()
+    public ResponseEntity<List<Student>> getStudentsByAgeBetween(@RequestParam int min,
+                                                                 @RequestParam int max) {
+        List<Student> studentList = studentService.getStudentsByAgeBetween(min, max);
+        if (studentList.isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.ok(studentList);
+    }
+
+    @GetMapping("/faculty")
+    public ResponseEntity<List<Student>> getStudentsByFacultyId(@RequestParam long id) {
+        List<Student> studentList = studentService.getByFacultyId(id);
+        if (studentList.isEmpty())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.ok(studentList);
+    }
+
     @PostMapping
     public Student creatStudent(@RequestBody Student student) {
         return studentService.createStudent(student);
@@ -48,7 +65,7 @@ public class StudentController {
     }
 
     @GetMapping("/filter{age}")
-    public List<Student> getStudentsByAge(@PathVariable int age){
+    public List<Student> getStudentsByAge(@PathVariable int age) {
         return studentService.getStudentsByAge(age);
     }
 

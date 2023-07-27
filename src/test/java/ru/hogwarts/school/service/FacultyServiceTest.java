@@ -73,17 +73,17 @@ public class FacultyServiceTest {
     @Test
     public void getFacultyByColorPositive() {
         List<Faculty> expected = new ArrayList<>(List.of(new Faculty(4L, "Slizz", "Black")));
-        Mockito.when(facultyRepository.findByColor("Black")).thenReturn(expected);
+        Mockito.when(facultyRepository.findByColorIgnoreCase("Black")).thenReturn(expected);
         List<Faculty> actual = facultyService.getFacultyByColor("Black");
-        assertIterableEquals(expected,actual);
+        assertIterableEquals(expected, actual);
     }
 
     @Test
     public void getFacultyByColorNegative() {
         List<Faculty> expected = new ArrayList<>();
-        Mockito.when(facultyRepository.findByColor("Black")).thenReturn(expected);
+        Mockito.when(facultyRepository.findByColorIgnoreCase("Black")).thenReturn(expected);
         List<Faculty> actual = facultyService.getFacultyByColor("Black");
-        assertIterableEquals(expected,actual);
+        assertIterableEquals(expected, actual);
     }
 
 }
