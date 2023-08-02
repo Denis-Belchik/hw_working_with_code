@@ -1,5 +1,7 @@
-package ru.hogwarts.school;
+package ru.hogwarts.school.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.assertj.core.api.Assertions;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +14,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import ru.hogwarts.school.controller.StudentController;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
+
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class StudentControllerTest {
@@ -86,7 +90,7 @@ public class StudentControllerTest {
         this.testRestTemplate.put(
                 "http://localhost:" + localPort + "/student", student, String.class);
         Student actual = studentService.getStudent(id);
-        Assertions.assertThat(!expected.equals(actual)).isTrue();
+        Assertions.assertThat(expected.equals(actual)).isFalse();
     }
 
     @Test
@@ -95,7 +99,7 @@ public class StudentControllerTest {
         this.testRestTemplate.delete(
                 "http://localhost:" + localPort + "/student/" + id);
         Student actual = studentService.getStudent(id);
-        Assertions.assertThat(!expected.equals(actual)).isTrue();
+        Assertions.assertThat(expected.equals(actual)).isFalse();
     }
 
     @Test
