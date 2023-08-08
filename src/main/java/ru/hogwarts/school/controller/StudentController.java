@@ -64,7 +64,7 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/filter{age}")
+    @GetMapping("/filter/{age}")
     public List<Student> getStudentsByAge(@PathVariable int age) {
         return studentService.getStudentsByAge(age);
     }

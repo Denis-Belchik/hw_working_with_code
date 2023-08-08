@@ -33,7 +33,7 @@ public class FacultyController {
         if (name != null && !name.isBlank())
             return ResponseEntity.ok(facultyService.getFacultyByName(name));
         if (color != null && !color.isBlank())
-            return ResponseEntity.ok(facultyService.getFacultyByName(color));
+            return ResponseEntity.ok(facultyService.getFacultyByColor(color));
         return ResponseEntity.ok(facultyService.getAllFaculty());
     }
 
@@ -65,7 +65,7 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/filter{color}")
+    @GetMapping("/filter/{color}")
     public List<Faculty> getFacultyByColor(@PathVariable String color) {
         return facultyService.getFacultyByColor(color);
     }
