@@ -36,7 +36,7 @@ public class StudentControllerTest {
     public void init() {
         student = new Student();
         student.setName("qwe");
-        age = 10;
+        age = 20;
         student.setAge(age);
         id = studentService.createStudent(student).getId();
     }
