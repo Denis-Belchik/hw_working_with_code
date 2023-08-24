@@ -7,6 +7,8 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalDouble;
 
 @RestController
 @RequestMapping("/student")
@@ -82,6 +84,21 @@ public class StudentController {
     @GetMapping("/filter/last-student")
     public List<Student> findLastFiveStudent(){
         return studentService.findLastFiveStudent();
+    }
+
+    @GetMapping("/filter/a-student")
+    public ResponseEntity<List<String>> findFirstAStudent(){
+        return ResponseEntity.ok(studentService.findFirstA());
+    }
+
+    @GetMapping("/filter/average-age-student")
+    public ResponseEntity<OptionalDouble> findAverageAgeStudent(){
+        return ResponseEntity.ok(studentService.findAverageAgeStudent());
+    }
+
+    @GetMapping("/sum-int")
+    public ResponseEntity<Integer> findSumInt(){
+        return ResponseEntity.ok(studentService.findSumInt());
     }
 
 }
