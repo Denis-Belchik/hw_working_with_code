@@ -1,12 +1,19 @@
 package ru.hogwarts.school.service;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class StudentService {
@@ -64,8 +71,59 @@ public class StudentService {
         return studentRepository.findAvgAgeStudent();
     }
 
-    public List<Student> findLastFiveStudent(){
+    public List<Student> findLastFiveStudent() {
         logger.info("findLastFiveStudent");
         return studentRepository.findLastFiveStudent();
+    }
+
+    public List<String> findFirstA() {
+        logger.info("findFirstA");
+        return studentRepository.findAll().stream()
+                .filter(s -> s.getName().startsWith("А"))
+                .map(s -> s.getName().toUpperCase())
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public OptionalDouble findAverageAgeStudent() {
+        logger.info("findAverageAgeStudent");
+        return studentRepository.findAll().stream()
+                .map(Student::getAge)
+                .mapToInt(s -> s)
+                .average();
+    }
+
+    public Integer findSumInt() {
+        int sum =0;
+
+//        long startStream = System.currentTimeMillis();
+//        sum = Stream.iterate(1, a -> a + 1)
+//                .limit(1_000_000)
+//                .reduce(0, Integer::sum);
+//        long finishStream = System.currentTimeMillis();
+//        logger.info("Выполнение стрима {}", finishStream - startStream);
+//        logger.info("Сумма {}", sum);
+//
+//        sum =0;
+//        long startStreamParallel = System.currentTimeMillis();
+//        sum = Stream.iterate(1, a -> a + 1)
+//                .parallel()
+//                .limit(1_000_000)
+//                .reduce(0, Integer::sum);
+//        long finishStreamParallel = System.currentTimeMillis();
+//        logger.info("Выполнение параллельного стрима {}", finishStreamParallel - startStreamParallel);
+//        logger.info("Сумма {}", sum);
+
+        sum =0;
+        long startFor = System.currentTimeMillis();
+        for (int i = 0; i < 1_000_000; i++) {
+            sum+=i;
+        }
+        long finishFor = System.currentTimeMillis();
+        logger.info("Выполнение цикла {}", finishFor - startFor);
+        logger.info("Сумма {}", sum);
+
+        return sum;
+
     }
 }

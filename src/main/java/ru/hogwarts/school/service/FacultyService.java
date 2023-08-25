@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repository.FacultyRepository;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FacultyService {
@@ -46,19 +48,26 @@ public class FacultyService {
         return facultyRepository.findByColorIgnoreCase(color);
     }
 
-    public List<Faculty> getFacultyByName(String name){
+    public List<Faculty> getFacultyByName(String name) {
         logger.info("getFacultyByName");
         return facultyRepository.findByNameIgnoreCase(name);
     }
 
-    public List<Faculty> getAllFaculty(){
+    public List<Faculty> getAllFaculty() {
         logger.info("getAllFaculty");
         return facultyRepository.findAll();
     }
 
-    public Faculty getByStudentsId(long id){
+    public Faculty getByStudentsId(long id) {
         logger.info("getByStudentsId");
         return facultyRepository.findByStudentsId(id);
+    }
+
+    public Optional<String> findLongName() {
+        logger.info("findLongName");
+        return facultyRepository.findAll().stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparing(String::length));
     }
 
 }
