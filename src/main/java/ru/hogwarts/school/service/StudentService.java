@@ -79,8 +79,8 @@ public class StudentService {
     public List<String> findFirstA() {
         logger.info("findFirstA");
         return studentRepository.findAll().stream()
-                .filter(s -> s.getName().startsWith("А"))
                 .map(s -> s.getName().toUpperCase())
+                .filter(s -> s.startsWith("А"))
                 .sorted()
                 .collect(Collectors.toList());
     }
@@ -94,7 +94,7 @@ public class StudentService {
     }
 
     public Integer findSumInt() {
-        int sum =0;
+        int sum = 0;
 
 //        long startStream = System.currentTimeMillis();
 //        sum = Stream.iterate(1, a -> a + 1)
@@ -114,16 +114,63 @@ public class StudentService {
 //        logger.info("Выполнение параллельного стрима {}", finishStreamParallel - startStreamParallel);
 //        logger.info("Сумма {}", sum);
 
-        sum =0;
+        sum = 0;
         long startFor = System.currentTimeMillis();
         for (int i = 0; i < 1_000_000; i++) {
-            sum+=i;
+            sum += i;
         }
         long finishFor = System.currentTimeMillis();
         logger.info("Выполнение цикла {}", finishFor - startFor);
         logger.info("Сумма {}", sum);
 
         return sum;
+
+    }
+
+    public void thread() {
+        List<String> list = studentRepository.findAll().stream()
+                .map(Student::getName)
+                .toList();
+
+        System.out.println(list);
+
+        System.out.println(list.get(0));
+        System.out.println(list.get(1));
+
+        new Thread(() -> {
+            System.out.println(list.get(2));
+            System.out.println(list.get(3));
+        }).start();
+
+        new Thread(() -> {
+            System.out.println(list.get(4));
+            System.out.println(list.get(5));
+        }).start();
+    }
+
+    public void threadSynchronized() {
+        List<String> list = studentRepository.findAll().stream()
+                .map(Student::getName)
+                .toList();
+
+        System.out.println(list);
+
+        System.out.println(list.get(0));
+        System.out.println(list.get(1));
+
+        new Thread(() -> {
+            synchronized (list) {
+                System.out.println(list.get(2));
+                System.out.println(list.get(3));
+            }
+        }).start();
+
+        new Thread(() -> {
+            synchronized (list) {
+                System.out.println(list.get(4));
+                System.out.println(list.get(5));
+            }
+        }).start();
 
     }
 }

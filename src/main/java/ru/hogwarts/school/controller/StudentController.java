@@ -101,4 +101,14 @@ public class StudentController {
         return ResponseEntity.ok(studentService.findSumInt());
     }
 
+    @GetMapping("/thread")
+    public void thread(){
+       studentService.thread();
+    }
+
+    @GetMapping("/thread-synchronized")
+    public void threadSynchronized(){
+        studentService.threadSynchronized();
+    }
+
 }
